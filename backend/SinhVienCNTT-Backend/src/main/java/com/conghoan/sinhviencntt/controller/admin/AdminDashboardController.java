@@ -17,16 +17,19 @@ public class AdminDashboardController {
     private final HoiDapRepository hoiDapRepo;
     private final ThongBaoRepository thongBaoRepo;
     private final DanhMucRepository danhMucRepo;
+    private final TinTucRepository tinTucRepo;
 
     public AdminDashboardController(SinhVienRepository sinhVienRepo, GiangVienRepository giangVienRepo,
-                                     KyHocRepository kyHocRepo, HoiDapRepository hoiDapRepo,
-                                     ThongBaoRepository thongBaoRepo, DanhMucRepository danhMucRepo) {
+                                    KyHocRepository kyHocRepo, HoiDapRepository hoiDapRepo,
+                                    ThongBaoRepository thongBaoRepo, DanhMucRepository danhMucRepo,
+                                    TinTucRepository tinTucRepo) {
         this.sinhVienRepo = sinhVienRepo;
         this.giangVienRepo = giangVienRepo;
         this.kyHocRepo = kyHocRepo;
         this.hoiDapRepo = hoiDapRepo;
         this.thongBaoRepo = thongBaoRepo;
         this.danhMucRepo = danhMucRepo;
+        this.tinTucRepo = tinTucRepo;
     }
 
     @GetMapping("/dashboard")

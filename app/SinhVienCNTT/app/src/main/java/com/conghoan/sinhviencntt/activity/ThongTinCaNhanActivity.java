@@ -80,7 +80,7 @@ public class ThongTinCaNhanActivity extends AppCompatActivity {
         addInfoRow("Lớp", getStringValue(data, "lop"));
         addInfoRow("Lớp chuyên ngành", getStringValue(data, "lopChuyenNganh"));
         addInfoRow("Ngành", getStringValue(data, "nganh"));
-//        addInfoRow("Khoa", getStringValue(data, "khoa"));
+        addInfoRow("Khoa", getStringValue(data, "khoa"));
         addInfoRow("Khoá nhập học", getStringValue(data, "khoaNhapHoc"));
         addInfoRow("Năm nhập học", getStringValue(data, "nhapHoc"));
         addInfoRow("Email 1", getStringValue(data, "email1"));
@@ -88,6 +88,34 @@ public class ThongTinCaNhanActivity extends AppCompatActivity {
         addInfoRow("Điện thoại 1", getStringValue(data, "dienThoai1"));
         addInfoRow("Điện thoại 2", getStringValue(data, "dienThoai2"));
         addInfoRow("Ghi chú", getStringValue(data, "ghiChu"));
+
+        // Load thông tin CVHT
+        String msv = getStringValue(data, "maSinhVien");
+        if (!msv.isEmpty()) {
+            loadCvht(msv);
+        }
+    }
+
+    private void loadCvht(String msv) {
+        ApiClient.getApiService(this).getCvhtOfSinhVien(msv).enqueue(new Callback<Map<String, String>>() {
+            @Override
+            public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    Map<String, String> cvht = response.body();
+                    String maGv = cvht.get("maGiangVien");
+                    String tenGv = cvht.get("tenGiangVien");
+                    String display = "";
+                    if (tenGv != null && !tenGv.isEmpty()) display = tenGv;
+                    if (maGv != null && !maGv.isEmpty()) display += " (" + maGv + ")";
+                    if (!display.isEmpty()) {
+                        addInfoRow("Cố vấn học tập", display.trim());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, String>> call, Throwable t) {}
+        });
     }
 
     private void addInfoRow(String label, String value) {

@@ -36,11 +36,14 @@
         <li class="nav-item"><a class="nav-link" th:classappend="${currentPage == 'tkb'} ? 'active'" href="/admin/tkb"><i class="bi bi-calendar-week"></i>Thời khoá biểu</a></li>
         <li class="nav-item"><a class="nav-link" th:classappend="${currentPage == 'cvht'} ? 'active'" href="/admin/cvht"><i class="bi bi-person-lines-fill"></i>Cố vấn HT</a></li>
         <li class="nav-item"><a class="nav-link" th:classappend="${currentPage == 'thongbao'} ? 'active'" href="/admin/thongbao"><i class="bi bi-megaphone"></i>Thông báo</a></li>
+        <li class="nav-item"><a class="nav-link" th:classappend="${currentPage == 'tintuc'} ? 'active'" href="/admin/tintuc"><i class="bi bi-newspaper"></i>Tin tức</a></li>
         <li class="nav-item"><a class="nav-link" th:classappend="${currentPage == 'hoidap'} ? 'active'" href="/admin/hoidap"><i class="bi bi-chat-dots"></i>Hỏi đáp</a></li>
         <li class="nav-item"><a class="nav-link" th:classappend="${currentPage == 'danhmuc'} ? 'active'" href="/admin/danhmuc"><i class="bi bi-grid"></i>Danh mục</a></li>
     </ul>
     <div class="mt-auto p-3 border-top" style="border-color: rgba(255,255,255,0.1) !important;">
-        <a href="/admin/logout" class="nav-link text-white-50"><i class="bi bi-box-arrow-left"></i> Đăng xuất</a>
+        <form th:action="@{/logout}" method="post" class="m-0 p-0">
+            <button type="submit" class="nav-link text-white-50 bg-transparent border-0 w-100 text-start"><i class="bi bi-box-arrow-left"></i> Đăng xuất</button>
+        </form>
     </div>
 </nav>
 <div th:fragment="alert">

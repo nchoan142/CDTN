@@ -221,8 +221,22 @@
         android:textStyle="bold"
         android:fontFamily="sans-serif-medium" />
 
+    <TextView
+        android:id="@+id/tv_empty_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_semester"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:text="Không có dữ liệu"
+        android:textColor="@color/text_hint"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-medium"
+        android:visibility="gone" />
+
     <!-- Grade list -->
     <ScrollView
+        android:id="@+id/scroll_view_grades"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/tv_semester"

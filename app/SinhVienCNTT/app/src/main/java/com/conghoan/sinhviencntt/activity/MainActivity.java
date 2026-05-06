@@ -100,21 +100,21 @@ public class MainActivity extends AppCompatActivity {
                 R.color.card_khoa_icon,
                 KhoaCNTTActivity.class));
 
-        items.add(new DashboardItem(
-                getString(R.string.menu_phongdaotao),
-                "Biểu mẫu, thủ tục hành chính",
-                R.drawable.ic_training,
-                R.color.card_phongdaotao,
-                R.color.card_phongdaotao_icon,
-                PhongDaoTaoActivity.class));
+//        items.add(new DashboardItem(
+//                getString(R.string.menu_phongdaotao),
+//                "Biểu mẫu, thủ tục hành chính",
+//                R.drawable.ic_training,
+//                R.color.card_phongdaotao,
+//                R.color.card_phongdaotao_icon,
+//                PhongDaoTaoActivity.class));
 
-        items.add(new DashboardItem(
-                getString(R.string.menu_truong),
-                "Tin tức & sự kiện trường",
-                R.drawable.ic_university,
-                R.color.card_truong,
-                R.color.card_truong_icon,
-                TruongDHTLActivity.class));
+//        items.add(new DashboardItem(
+//                getString(R.string.menu_truong),
+//                "Tin tức & sự kiện trường",
+//                R.drawable.ic_university,
+//                R.color.card_truong,
+//                R.color.card_truong_icon,
+//                TruongDHTLActivity.class));
 
         items.add(new DashboardItem(
                 getString(R.string.menu_thongtin),

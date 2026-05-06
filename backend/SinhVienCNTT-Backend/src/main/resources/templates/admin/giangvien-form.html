@@ -13,6 +13,7 @@
                     <div class="col-md-4"><label class="form-label">Mã GV *</label><input type="text" class="form-control" th:field="*{maGiangVien}" required/></div>
                     <div class="col-md-4"><label class="form-label">Họ tên đệm</label><input type="text" class="form-control" th:field="*{hoTenDem}"/></div>
                     <div class="col-md-4"><label class="form-label">Tên *</label><input type="text" class="form-control" th:field="*{ten}" required/></div>
+                    <div class="col-md-4"><label class="form-label">Mật khẩu đăng nhập</label><input type="password" class="form-control" name="rawPassword" th:placeholder="${giangVien.id != null} ? 'Để trống nếu không đổi' : 'Mặc định = Mã GV'"/></div>
                     <div class="col-md-3"><label class="form-label">Học vị</label><input type="text" class="form-control" th:field="*{hocVi}" placeholder="ThS, TS, PGS..."/></div>
                     <div class="col-md-3"><label class="form-label">Học hàm</label><input type="text" class="form-control" th:field="*{hocHam}"/></div>
                     <div class="col-md-3"><label class="form-label">Đơn vị</label><input type="text" class="form-control" th:field="*{donVi}"/></div>

@@ -57,6 +57,7 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         createDefaultAdmin();
+        fixGiangVienPasswords();
         seedTKB();
         seedBieuMau();
         seedThongBao();
@@ -72,6 +73,23 @@ public class DataSeeder implements CommandLineRunner {
         importGiangVien();
         importBangDiem();
         System.out.println(">>> Import du lieu hoan tat!");
+    }
+
+    private void fixGiangVienPasswords() {
+        // Cập nhật password cho GV chưa có hoặc password chưa mã hóa BCrypt
+        List<com.conghoan.sinhviencntt.entity.GiangVien> allGv = giangVienRepo.findAll();
+        int fixed = 0;
+        for (com.conghoan.sinhviencntt.entity.GiangVien gv : allGv) {
+            if (gv.getPassword() == null || gv.getPassword().isEmpty()
+                    || !gv.getPassword().startsWith("$2")) {
+                gv.setPassword(passwordEncoder.encode(gv.getMaGiangVien()));
+                giangVienRepo.save(gv);
+                fixed++;
+            }
+        }
+        if (fixed > 0) {
+            System.out.println(">>> Cap nhat password cho " + fixed + " giang vien (mat khau = ma GV)");
+        }
     }
 
     private void createDefaultAdmin() {
@@ -224,6 +242,7 @@ public class DataSeeder implements CommandLineRunner {
             if (maGv == null || giangVienRepo.existsByMaGiangVien(maGv)) return;
             GiangVien gv = GiangVien.builder()
                     .maGiangVien(maGv)
+                    .password(passwordEncoder.encode(maGv)) // Mật khẩu mặc định = mã giảng viên
                     .ten(getStr(obj, "ten"))
                     .hoTenDem(getStr(obj, "hoTenDem"))
                     .donVi(getStr(obj, "donVi"))
@@ -250,16 +269,18 @@ public class DataSeeder implements CommandLineRunner {
 
     private void importBangDiem() {
         try {
-            String[] files = {"bangdiem_A38200.json", "bangdiem_A40405.json", "bangdiem_A38843.json",
-                    "bangdiem_A38146.json", "bangdiem_A40547.json", "bangdiem_A37892.json"};
-            for (String fileName : files) {
-                Path file = Path.of(crawledDataPath, fileName);
-                if (!Files.exists(file)) continue;
-                String msv = fileName.replace("bangdiem_", "").replace(".json", "");
-                Reader reader = new FileReader(file.toFile());
+            java.io.File dir = new java.io.File(crawledDataPath);
+            java.io.File[] bangDiemFiles = dir.listFiles((d, name) ->
+                    name.startsWith("bangdiem_") && name.endsWith(".json"));
+            if (bangDiemFiles == null || bangDiemFiles.length == 0) return;
+            int count = 0;
+            for (java.io.File bdFile : bangDiemFiles) {
+                String msv = bdFile.getName().replace("bangdiem_", "").replace(".json", "");
+                Reader reader = new FileReader(bdFile);
                 Type type = new TypeToken<List<JsonObject>>() {}.getType();
                 List<JsonObject> list = gson.fromJson(reader, type);
                 reader.close();
+                if (list == null || list.isEmpty()) continue;
                 for (JsonObject obj : list) {
                     BangDiem bd = BangDiem.builder()
                             .maSinhVien(msv)
@@ -275,9 +296,10 @@ public class DataSeeder implements CommandLineRunner {
                             .chuyenNganhId(getStr(obj, "chuyenNganhId"))
                             .build();
                     bangDiemRepo.save(bd);
+                    count++;
                 }
             }
-            System.out.println(">>> Import bang diem: " + bangDiemRepo.count());
+            System.out.println(">>> Import bang diem: " + count + " dong tu " + bangDiemFiles.length + " file");
         } catch (Exception e) {
             System.err.println("Loi import bang diem: " + e.getMessage());
         }

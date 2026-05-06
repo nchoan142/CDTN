@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,11 +24,16 @@ import retrofit2.Response;
 public class BangDiemActivity extends AppCompatActivity {
 
     private LinearLayout gradeContainer;
+    private TextView tvEmptyData;
+    private ScrollView scrollViewGrades;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bangdiem);
+
+        tvEmptyData = findViewById(R.id.tv_empty_data);
+        scrollViewGrades = findViewById(R.id.scroll_view_grades);
 
         ImageView btnBack = findViewById(R.id.btn_back);
         btnBack.setOnClickListener(v -> {
@@ -78,9 +84,8 @@ public class BangDiemActivity extends AppCompatActivity {
 
             Double diem = bd.getDiemTongKet();
             String diemStr = diem != null && diem >= 0 ? String.format("%.1f", diem) : "-";
-            ((TextView) row.findViewById(R.id.tv_score_detail)).setText("Mã HP: " + bd.getMaHocPhan());
-
             String grade = getLetterGrade(diem);
+            ((TextView) row.findViewById(R.id.tv_score_detail)).setText("Mã HP: " + bd.getMaHocPhan() + "  |  Điểm: " + diemStr + " (" + grade + ")");
             TextView tvGrade = row.findViewById(R.id.tv_grade_letter);
             tvGrade.setText(grade);
 
@@ -131,11 +136,27 @@ public class BangDiemActivity extends AppCompatActivity {
     }
 
     private void setupMockGrades() {
-        setupGradeRow(R.id.grade1, "Lập trình Java", "3 TC", "QT: 8.5 | CK: 8.0", "A");
-        setupGradeRow(R.id.grade2, "Cơ sở dữ liệu", "3 TC", "QT: 7.0 | CK: 7.5", "B+");
-        setupGradeRow(R.id.grade3, "Mạng máy tính", "3 TC", "QT: 8.0 | CK: 6.5", "B");
-        setupGradeRow(R.id.grade4, "Toán rời rạc", "2 TC", "QT: 9.0 | CK: 8.5", "A");
-        setupGradeRow(R.id.grade5, "Tiếng Anh CNTT", "2 TC", "QT: 7.5 | CK: 7.0", "B+");
+//        setupGradeRow(R.id.grade1, "Lập trình Java", "3 TC", "QT: 8.5 | CK: 8.0", "A");
+//        setupGradeRow(R.id.grade2, "Cơ sở dữ liệu", "3 TC", "QT: 7.0 | CK: 7.5", "B+");
+//        setupGradeRow(R.id.grade3, "Mạng máy tính", "3 TC", "QT: 8.0 | CK: 6.5", "B");
+//        setupGradeRow(R.id.grade4, "Toán rời rạc", "2 TC", "QT: 9.0 | CK: 8.5", "A");
+//        setupGradeRow(R.id.grade5, "Tiếng Anh CNTT", "2 TC", "QT: 7.5 | CK: 7.0", "B+");
+        // Hiện thông báo "Sinh viên chưa có điểm"
+        if (tvEmptyData != null) {
+            tvEmptyData.setVisibility(View.VISIBLE);
+            tvEmptyData.setText("Sinh viên chưa có điểm");
+        }
+
+        // Ẩn danh sách điểm (ScrollView)
+        if (scrollViewGrades != null) {
+            scrollViewGrades.setVisibility(View.GONE);
+        }
+
+        // Reset các chỉ số trên Card GPA về 0
+        TextView tvGpa = findViewById(R.id.tv_gpa);
+        TextView tvCredits = findViewById(R.id.tv_credits_info);
+        if (tvGpa != null) tvGpa.setText("0.00");
+        if (tvCredits != null) tvCredits.setText("0/0");
     }
 
     private void setupGradeRow(int viewId, String subject, String credits, String scoreDetail, String grade) {

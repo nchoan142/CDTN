@@ -50,10 +50,18 @@ public interface ApiService {
     @GET("api/v1/thongbao")
     Call<List<ThongBaoModel>> getThongBao();
 
-    // Hoi dap
-    @GET("api/v1/hoidap")
-    Call<List<HoiDapModel>> getHoiDap();
+    // Hoi dap - lấy Q&A của chính sinh viên đó
+    @GET("api/v1/hoidap/sinhvien/{msv}")
+    Call<List<HoiDapModel>> getHoiDapByMsv(@Path("msv") String msv);
 
     @POST("api/v1/hoidap")
     Call<ApiResponse<String>> guiCauHoi(@Body Map<String, String> body);
+
+    // Tin tuc khoa CNTT
+    @GET("api/v1/tintuc")
+    Call<List<ThongBaoModel>> getTinTuc();
+
+    // CVHT cua sinh vien
+    @GET("api/v1/covanhoctap/sinhvien/{msv}")
+    Call<Map<String, String>> getCvhtOfSinhVien(@Path("msv") String msv);
 }

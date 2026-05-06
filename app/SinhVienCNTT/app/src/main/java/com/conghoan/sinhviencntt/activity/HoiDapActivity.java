@@ -51,7 +51,9 @@ public class HoiDapActivity extends AppCompatActivity {
     }
 
     private void loadHoiDap() {
-        ApiClient.getApiService(this).getHoiDap().enqueue(new Callback<List<HoiDapModel>>() {
+        SharedPreferences prefs = getSharedPreferences("SinhVienCNTT", MODE_PRIVATE);
+        String msv = prefs.getString("msv", "");
+        ApiClient.getApiService(this).getHoiDapByMsv(msv).enqueue(new Callback<List<HoiDapModel>>() {
             @Override
             public void onResponse(Call<List<HoiDapModel>> call, Response<List<HoiDapModel>> response) {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {

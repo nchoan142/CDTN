@@ -2,6 +2,7 @@ package com.conghoan.sinhviencntt.activity;
 
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,7 +13,10 @@ import androidx.core.content.ContextCompat;
 
 import com.conghoan.sinhviencntt.R;
 import com.conghoan.sinhviencntt.model.GiangVienModel;
+import com.conghoan.sinhviencntt.model.ThongBaoModel;
 import com.conghoan.sinhviencntt.network.ApiClient;
+
+import androidx.cardview.widget.CardView;
 
 import java.util.List;
 import java.util.Map;
@@ -40,6 +44,7 @@ public class KhoaCNTTActivity extends AppCompatActivity {
         setupContacts();
         loadGiangVien();
         loadSinhVienCount();
+        loadTinTuc();
     }
 
     private void setupContacts() {
@@ -118,6 +123,71 @@ public class KhoaCNTTActivity extends AppCompatActivity {
 
     private void setupMockTeachers() {
         // Fallback
+    }
+
+    private void loadTinTuc() {
+        ApiClient.getApiService(this).getTinTuc().enqueue(new Callback<List<ThongBaoModel>>() {
+            @Override
+            public void onResponse(Call<List<ThongBaoModel>> call, Response<List<ThongBaoModel>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    displayTinTuc(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ThongBaoModel>> call, Throwable t) {}
+        });
+    }
+
+    private void displayTinTuc(List<ThongBaoModel> list) {
+        LinearLayout newsContainer = findViewById(R.id.news_container);
+        if (newsContainer == null) return;
+        newsContainer.removeAllViews();
+
+        for (ThongBaoModel tt : list) {
+            CardView card = new CardView(this);
+            CardView.LayoutParams cardLp = new CardView.LayoutParams(
+                    CardView.LayoutParams.MATCH_PARENT, CardView.LayoutParams.WRAP_CONTENT);
+            cardLp.bottomMargin = 20;
+            card.setLayoutParams(cardLp);
+            card.setRadius(28);
+            card.setCardElevation(6);
+            card.setContentPadding(32, 28, 32, 28);
+            card.setCardBackgroundColor(getResources().getColor(R.color.bg_card));
+
+            LinearLayout inner = new LinearLayout(this);
+            inner.setOrientation(LinearLayout.VERTICAL);
+
+            TextView tvTitle = new TextView(this);
+            tvTitle.setText(tt.getTieuDe());
+            tvTitle.setTextColor(getResources().getColor(R.color.text_primary));
+            tvTitle.setTextSize(14);
+            tvTitle.setTypeface(null, android.graphics.Typeface.BOLD);
+            tvTitle.setPadding(0, 0, 0, 8);
+            inner.addView(tvTitle);
+
+            TextView tvContent = new TextView(this);
+            tvContent.setText(tt.getNoiDung());
+            tvContent.setTextColor(getResources().getColor(R.color.text_secondary));
+            tvContent.setTextSize(13);
+            tvContent.setPadding(0, 0, 0, 12);
+            inner.addView(tvContent);
+
+            LinearLayout metaRow = new LinearLayout(this);
+            metaRow.setGravity(android.view.Gravity.CENTER_VERTICAL);
+            TextView tvMeta = new TextView(this);
+            Log.d("KhoaCNTTActivity", "ten nguoi gui: " + tt.getNguoiDang());
+            String meta = (tt.getNguoiDang() != null ? tt.getNguoiDang() : "Khoa CNTT");
+            if (tt.getNgayGui() != null) meta += " | " + tt.getNgayGui().substring(0, Math.min(10, tt.getNgayGui().length()));
+            tvMeta.setText(meta);
+            tvMeta.setTextColor(getResources().getColor(R.color.text_hint));
+            tvMeta.setTextSize(11);
+            metaRow.addView(tvMeta);
+            inner.addView(metaRow);
+
+            card.addView(inner);
+            newsContainer.addView(card);
+        }
     }
 
     private void setupContactRow(int viewId, int iconRes, String label, String value, int bgColorRes) {

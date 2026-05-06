@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -48,19 +49,25 @@ public class SecurityConfig {
     public SecurityFilterChain adminFilterChain(HttpSecurity http) throws Exception {
         http
             .securityMatcher("/admin/**", "/login")
+//            .securityMatcher("/admin/**")
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/css/**", "/js/**").permitAll()
-                .requestMatchers("/admin/**").authenticated()
+                    .requestMatchers("/login", "/css/**", "/js/**").permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/admin/logout", "GET")).permitAll()
+                    .requestMatchers("/admin/**").authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/login")
-                .defaultSuccessUrl("/admin/dashboard", true)
-                .permitAll()
+                    .loginPage("/admin/login")
+                    .loginProcessingUrl("/login")
+                    .defaultSuccessUrl("/admin/dashboard", true)
+                    .permitAll()
             )
             .logout(logout -> logout
-                .logoutUrl("/admin/logout")
-                .logoutSuccessUrl("/login?logout")
-                .permitAll()
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/admin/logout", "GET"))
+                    .logoutUrl("/admin/logout")
+                    .logoutSuccessUrl("/login?logout")
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID")
+                    .permitAll()
             );
         return http.build();
     }
