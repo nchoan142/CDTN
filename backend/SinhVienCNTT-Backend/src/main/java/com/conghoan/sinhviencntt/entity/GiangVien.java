@@ -12,7 +12,7 @@ public class GiangVien {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "ma_giang_vien", unique = true, nullable = false)
     private String maGiangVien;
 
     @JsonIgnore
