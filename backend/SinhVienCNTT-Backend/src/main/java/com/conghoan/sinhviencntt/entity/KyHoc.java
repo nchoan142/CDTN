@@ -11,7 +11,7 @@ public class KyHoc {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "ma_ky", unique = true, nullable = false)
     private String maKy;
 
     private String tenKy;

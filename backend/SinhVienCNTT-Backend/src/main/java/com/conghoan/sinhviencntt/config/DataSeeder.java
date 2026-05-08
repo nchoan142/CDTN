@@ -58,8 +58,8 @@ public class DataSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
         createDefaultAdmin();
         fixGiangVienPasswords();
-        seedTKB();
-        seedBieuMau();
+//        seedTKB();
+//        seedBieuMau();
         seedThongBao();
         if (sinhVienRepo.count() > 0) {
             System.out.println(">>> Du lieu da ton tai, bo qua seed.");
@@ -70,7 +70,7 @@ public class DataSeeder implements CommandLineRunner {
         importKyHoc();
         importCoVanHocTap();
         importDanhMuc();
-        importGiangVien();
+//        importGiangVien();
         importBangDiem();
         System.out.println(">>> Import du lieu hoan tat!");
     }
@@ -187,6 +187,14 @@ public class DataSeeder implements CommandLineRunner {
                 List<JsonObject> list = gson.fromJson(reader, type);
                 reader.close();
                 for (JsonObject obj : list) {
+                    String maGv = getStr(obj, "maGiangVien");
+
+                    // Kiểm tra xem mã GV có tồn tại chưa, chưa có thì báo lỗi và bỏ qua
+                    if (!giangVienRepo.existsByMaGiangVien(maGv)) {
+                        System.err.println(">>> LỖI DỮ LIỆU: Bỏ qua CVHT vì mã giảng viên [" + maGv + "] không tồn tại trong DB!");
+                        continue;
+                    }
+
                     CoVanHocTap cv = CoVanHocTap.builder()
                             .maGiangVien(getStr(obj, "maGiangVien"))
                             .maLop(getStr(obj, "maLop"))
@@ -305,19 +313,19 @@ public class DataSeeder implements CommandLineRunner {
         }
     }
 
-    private void seedTKB() {
-        if (tkbRepo.count() > 0) return;
-        String maKy = "2526K2";
-        String msv = "A38200";
-        tkbRepo.save(ThoiKhoaBieu.builder().maSinhVien(msv).maHocPhan("CS410").tenHocPhan("Lập trình Java nâng cao").maGiangVien("CTI064").tenGiangVien("ThS. Nguyễn Văn Hùng").phongHoc("A3-302").thu(2).tietBatDau("1").tietKetThuc("3").gioBatDau("7:00").gioKetThuc("9:30").maKy(maKy).nhom("01").build());
-        tkbRepo.save(ThoiKhoaBieu.builder().maSinhVien(msv).maHocPhan("IS222").tenHocPhan("Cơ sở dữ liệu").maGiangVien("CTI063").tenGiangVien("TS. Trần Thị Mai").phongHoc("B2-105").thu(2).tietBatDau("4").tietKetThuc("6").gioBatDau("9:30").gioKetThuc("12:00").maKy(maKy).nhom("01").build());
-        tkbRepo.save(ThoiKhoaBieu.builder().maSinhVien(msv).maHocPhan("NW212").tenHocPhan("Mạng máy tính").maGiangVien("CTI030").tenGiangVien("ThS. Lê Đức Anh").phongHoc("C1-201").thu(3).tietBatDau("1").tietKetThuc("3").gioBatDau("7:00").gioKetThuc("9:30").maKy(maKy).nhom("01").build());
-        tkbRepo.save(ThoiKhoaBieu.builder().maSinhVien(msv).maHocPhan("AI220").tenHocPhan("Trí tuệ nhân tạo").maGiangVien("PAI005").tenGiangVien("TS. Phạm Minh Tuấn").phongHoc("A3-401").thu(4).tietBatDau("1").tietKetThuc("3").gioBatDau("7:00").gioKetThuc("9:30").maKy(maKy).nhom("01").build());
-        tkbRepo.save(ThoiKhoaBieu.builder().maSinhVien(msv).maHocPhan("IS345").tenHocPhan("An toàn thông tin").maGiangVien("CTI030").tenGiangVien("ThS. Lê Đức Anh").phongHoc("B2-301").thu(4).tietBatDau("4").tietKetThuc("6").gioBatDau("9:30").gioKetThuc("12:00").maKy(maKy).nhom("01").build());
-        tkbRepo.save(ThoiKhoaBieu.builder().maSinhVien(msv).maHocPhan("MA234").tenHocPhan("Thống kê ứng dụng").maGiangVien("MTI058").tenGiangVien("ThS. Hoàng Văn Nam").phongHoc("A2-101").thu(5).tietBatDau("7").tietKetThuc("9").gioBatDau("13:00").gioKetThuc("15:30").maKy(maKy).nhom("01").build());
-        tkbRepo.save(ThoiKhoaBieu.builder().maSinhVien(msv).maHocPhan("CF231").tenHocPhan("Kiến trúc máy tính").maGiangVien("CTI057").tenGiangVien("TS. Trần Văn Bình").phongHoc("C1-102").thu(6).tietBatDau("1").tietKetThuc("3").gioBatDau("7:00").gioKetThuc("9:30").maKy(maKy).nhom("01").build());
-        System.out.println(">>> Seed TKB: " + tkbRepo.count());
-    }
+//    private void seedTKB() {
+//        if (tkbRepo.count() > 0) return;
+//        String maKy = "2526K2";
+//        String msv = "A38200";
+//        tkbRepo.save(ThoiKhoaBieu.builder().maSinhVien(msv).maHocPhan("CS410").tenHocPhan("Lập trình Java nâng cao").maGiangVien("CTI064").tenGiangVien("ThS. Nguyễn Văn Hùng").phongHoc("A3-302").thu(2).tietBatDau("1").tietKetThuc("3").gioBatDau("7:00").gioKetThuc("9:30").maKy(maKy).nhom("01").build());
+//        tkbRepo.save(ThoiKhoaBieu.builder().maSinhVien(msv).maHocPhan("IS222").tenHocPhan("Cơ sở dữ liệu").maGiangVien("CTI063").tenGiangVien("TS. Trần Thị Mai").phongHoc("B2-105").thu(2).tietBatDau("4").tietKetThuc("6").gioBatDau("9:30").gioKetThuc("12:00").maKy(maKy).nhom("01").build());
+//        tkbRepo.save(ThoiKhoaBieu.builder().maSinhVien(msv).maHocPhan("NW212").tenHocPhan("Mạng máy tính").maGiangVien("CTI030").tenGiangVien("ThS. Lê Đức Anh").phongHoc("C1-201").thu(3).tietBatDau("1").tietKetThuc("3").gioBatDau("7:00").gioKetThuc("9:30").maKy(maKy).nhom("01").build());
+//        tkbRepo.save(ThoiKhoaBieu.builder().maSinhVien(msv).maHocPhan("AI220").tenHocPhan("Trí tuệ nhân tạo").maGiangVien("PAI005").tenGiangVien("TS. Phạm Minh Tuấn").phongHoc("A3-401").thu(4).tietBatDau("1").tietKetThuc("3").gioBatDau("7:00").gioKetThuc("9:30").maKy(maKy).nhom("01").build());
+//        tkbRepo.save(ThoiKhoaBieu.builder().maSinhVien(msv).maHocPhan("IS345").tenHocPhan("An toàn thông tin").maGiangVien("CTI030").tenGiangVien("ThS. Lê Đức Anh").phongHoc("B2-301").thu(4).tietBatDau("4").tietKetThuc("6").gioBatDau("9:30").gioKetThuc("12:00").maKy(maKy).nhom("01").build());
+//        tkbRepo.save(ThoiKhoaBieu.builder().maSinhVien(msv).maHocPhan("MA234").tenHocPhan("Thống kê ứng dụng").maGiangVien("MTI058").tenGiangVien("ThS. Hoàng Văn Nam").phongHoc("A2-101").thu(5).tietBatDau("7").tietKetThuc("9").gioBatDau("13:00").gioKetThuc("15:30").maKy(maKy).nhom("01").build());
+//        tkbRepo.save(ThoiKhoaBieu.builder().maSinhVien(msv).maHocPhan("CF231").tenHocPhan("Kiến trúc máy tính").maGiangVien("CTI057").tenGiangVien("TS. Trần Văn Bình").phongHoc("C1-102").thu(6).tietBatDau("1").tietKetThuc("3").gioBatDau("7:00").gioKetThuc("9:30").maKy(maKy).nhom("01").build());
+//        System.out.println(">>> Seed TKB: " + tkbRepo.count());
+//    }
 
     private void seedBieuMau() {
         if (bieuMauRepo.count() > 0) return;
