@@ -59,7 +59,7 @@ public class DataSeeder implements CommandLineRunner {
         createDefaultAdmin();
         fixGiangVienPasswords();
 //        seedTKB();
-        seedBieuMau();
+//        seedBieuMau();
         seedThongBao();
         if (sinhVienRepo.count() > 0) {
             System.out.println(">>> Du lieu da ton tai, bo qua seed.");
